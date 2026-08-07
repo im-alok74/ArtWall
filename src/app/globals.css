@@ -1,0 +1,245 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   ArtWall design tokens
+   Source of truth: docs/ArtWall_Experience_Design_System.md (§8–§11, §17)
+
+   The pre-launch site is dark-first by design — the near-black canvas is the
+   brand's core visual argument (a wall waiting to be lit). So :root carries
+   the wall theme directly rather than living behind a .dark class.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* — Brand palette (§10) ------------------------------------------------ */
+  --color-wall-black: #06070a;
+  --color-wall-charcoal: #121317;
+  --color-wall-elevated: #1c1e24;
+  --color-wall-paper: #f5efe4;
+  --color-ember: #e8a33d;
+  --color-ember-glow: #f4c87a;
+  --color-lab-blue: #3e6cc4;
+  --color-terracotta: #b5573b;
+  --color-ink: #e9e7e1;
+  --color-ink-muted: #9b9890;
+
+  /* — Type scale (§9). Paired line-height + tracking per step. ----------- */
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--letter-spacing: 0.04em;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.125rem;
+  --text-label--letter-spacing: 0.06em;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.25rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.75rem;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 2rem;
+  --text-lead--letter-spacing: -0.005em;
+  --text-h4: 1.5rem;
+  --text-h4--line-height: 2rem;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h3: 2rem;
+  --text-h3--line-height: 2.5rem;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h2: 2.5rem;
+  --text-h2--line-height: 3.25rem;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h1: 3.5rem;
+  --text-h1--line-height: 4rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-display-s: 4.5rem;
+  --text-display-s--line-height: 5rem;
+  --text-display-s--letter-spacing: -0.02em;
+  --text-display-l: 6rem;
+  --text-display-l--line-height: 6.5rem;
+  --text-display-l--letter-spacing: -0.02em;
+
+  /* — Spacing (§11). 8px base with a 4px half-step; widens fast at the top
+       because generous negative space is the difference between a gallery
+       and a marketplace. ------------------------------------------------- */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+
+  /* — Shadows (§8.3) ----------------------------------------------------- */
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.08);
+  --shadow-medium: 0 4px 12px rgb(0 0 0 / 0.12);
+  --shadow-large: 0 12px 32px rgb(0 0 0 / 0.18);
+  --shadow-floating: 0 24px 64px rgb(0 0 0 / 0.28);
+
+  /* — Motion (§17). Every animation draws its timing from here so the same
+       ceremony always feels identical across the site. ------------------- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* — Containers (§8.1) -------------------------------------------------- */
+  --container-wall: 1440px;
+}
+
+/* Motion + z-index scales are consumed by JS/inline styles rather than
+   generating utility classes, so they live on :root instead of @theme. */
+:root {
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-moderate: 350ms;
+  --duration-slow: 550ms;
+  --duration-scene: 1200ms;
+
+  --z-base: 0;
+  --z-elevated: 10;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+  --z-cursor: 999;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-heading);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* shadcn's semantic contract, bound to ArtWall brand values so every
+   generated component inherits the gallery palette automatically. */
+:root {
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-fraunces);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --background: var(--color-wall-black);
+  --foreground: var(--color-ink);
+  --card: var(--color-wall-charcoal);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-wall-charcoal);
+  --popover-foreground: var(--color-ink);
+
+  /* Amber is earned, not decorative — it is the primary action colour and
+     appears almost nowhere else (§10). */
+  --primary: var(--color-ember);
+  --primary-foreground: var(--color-wall-black);
+
+  --secondary: var(--color-wall-elevated);
+  --secondary-foreground: var(--color-ink);
+  --muted: #16181d;
+  --muted-foreground: var(--color-ink-muted);
+  --accent: var(--color-wall-elevated);
+  --accent-foreground: var(--color-ink);
+  --destructive: #c4483a;
+
+  --border: rgb(233 231 225 / 0.12);
+  --input: rgb(233 231 225 / 0.15);
+  /* Focus rings use amber: brand-consistent and high-contrast on near-black. */
+  --ring: var(--color-ember);
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+    /* Smooth scroll only for users who haven't asked for reduced motion. */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+
+  /* A single, consistent, high-contrast focus ring across every interactive
+     element — never suppressed (§16). */
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-wall-black);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /* Global safety net. Individual components still branch on the
+       preference for meaningful fallbacks; this guarantees nothing
+       animates for users who opted out, even if a component forgets. */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Vertical rhythm for full-bleed narrative sections. */
+  .section-y {
+    padding-block: var(--spacing-16);
+  }
+
+  @media (width >= 1024px) {
+    .section-y {
+      padding-block: var(--spacing-24);
+    }
+  }
+}
