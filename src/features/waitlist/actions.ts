@@ -57,6 +57,14 @@ export async function joinWaitlist(
     practice: formData.get("practice") || undefined,
     city: formData.get("city") ?? "",
     website: formData.get("website") ?? "",
+    artworkUrl: formData.get("artworkUrl") ?? "",
+    artworkPublicId: formData.get("artworkPublicId") ?? "",
+    artworkWidth: formData.get("artworkWidth") || undefined,
+    artworkHeight: formData.get("artworkHeight") || undefined,
+    selfieUrl: formData.get("selfieUrl") ?? "",
+    selfiePublicId: formData.get("selfiePublicId") ?? "",
+    artworkTitle: formData.get("artworkTitle") ?? "",
+    quote: formData.get("quote") ?? "",
   };
 
   const parsed = waitlistSchema.safeParse(raw);

@@ -50,6 +50,11 @@ export const primaryCta = {
  */
 export const secondaryNavItems: readonly NavItem[] = [
   {
+    label: "The Platform",
+    href: "/platform",
+    description: "The problem, the three layers, and the artist's share",
+  },
+  {
     label: "Certification",
     href: "/certificate",
     description: "How we prove a work is yours",

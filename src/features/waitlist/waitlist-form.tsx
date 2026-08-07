@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 
+import { ImageDrop } from "@/features/upload/image-drop";
+import type { UploadedAsset } from "@/features/upload/compress";
 import { joinWaitlist } from "@/features/waitlist/actions";
 import { FounderCertificate } from "@/features/waitlist/founder-certificate";
 import {
@@ -63,6 +65,8 @@ function SubmitButton() {
  */
 export function WaitlistForm() {
   const [state, formAction] = useActionState(joinWaitlist, initialState);
+  const [artwork, setArtwork] = useState<UploadedAsset | null>(null);
+  const [selfie, setSelfie] = useState<UploadedAsset | null>(null);
 
   if (state.status === "success") {
     return (
@@ -162,6 +166,73 @@ export function WaitlistForm() {
           error={fieldError(state, "city")}
         />
       </div>
+
+      {/* Uploads. Optional — an artist can hold a place without one, and add
+          their work later. The artwork is what becomes their tile. */}
+      <fieldset className="border-border flex flex-col gap-5 rounded-lg border p-4">
+        <legend className="text-label text-muted-foreground px-1 tracking-wider uppercase">
+          Your place on the wall
+        </legend>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <ImageDrop
+            kind="artwork"
+            label="Your artwork"
+            hint="This becomes your tile on the wall."
+            onChange={setArtwork}
+          />
+          <ImageDrop
+            kind="selfie"
+            label="You (optional)"
+            hint="Shown with your work. Only add it if you're happy for it to be public."
+            onChange={setSelfie}
+          />
+        </div>
+
+        <Field
+          id="artworkTitle"
+          name="artworkTitle"
+          label="Title of the work"
+        />
+
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="quote"
+            className="text-label text-muted-foreground tracking-wider uppercase"
+          >
+            One line about it
+          </label>
+          <textarea
+            id="quote"
+            name="quote"
+            rows={2}
+            maxLength={280}
+            placeholder="Why you made it, or what it's of."
+            className="border-border bg-background placeholder:text-muted-foreground text-body rounded-md border p-3"
+          />
+        </div>
+
+        {/* Upload results travel with the form post and are re-validated
+            server-side against Cloudinary's host. */}
+        <input type="hidden" name="artworkUrl" value={artwork?.url ?? ""} />
+        <input
+          type="hidden"
+          name="artworkPublicId"
+          value={artwork?.publicId ?? ""}
+        />
+        <input type="hidden" name="artworkWidth" value={artwork?.width ?? ""} />
+        <input
+          type="hidden"
+          name="artworkHeight"
+          value={artwork?.height ?? ""}
+        />
+        <input type="hidden" name="selfieUrl" value={selfie?.url ?? ""} />
+        <input
+          type="hidden"
+          name="selfiePublicId"
+          value={selfie?.publicId ?? ""}
+        />
+      </fieldset>
 
       <SubmitButton />
 

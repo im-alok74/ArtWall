@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Tooling that ships with the editor/agent setup — not our source, and it
+    // targets CommonJS, which this config deliberately forbids in app code.
+    ".claude/**",
   ]),
 ]);
 

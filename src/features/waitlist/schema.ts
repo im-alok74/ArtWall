@@ -19,6 +19,31 @@ export const practices = [
 export const roles = ["artist", "collector"] as const;
 
 /**
+ * Only accept image URLs served by Cloudinary.
+ *
+ * The client uploads directly and reports back the resulting URL, so this field
+ * is attacker-controlled. Without a host check, anyone could POST a link to any
+ * image on the internet and have the wall render it under our brand — an open
+ * hotlinking and defacement hole. Restricting the host closes it.
+ */
+const cloudinaryUrl = z
+  .string()
+  .trim()
+  .max(2048)
+  .pipe(z.url())
+  .refine(
+    (value) => {
+      try {
+        const { protocol, hostname } = new URL(value);
+        return protocol === "https:" && hostname === "res.cloudinary.com";
+      } catch {
+        return false;
+      }
+    },
+    { message: "Images must be uploaded through ArtWall." }
+  );
+
+/**
  * The single source of truth for waitlist input, shared by the client form and
  * the server action.
  *
@@ -51,6 +76,21 @@ export const waitlistSchema = z.object({
    * Named innocuously because scrapers skip fields called "honeypot".
    */
   website: z.string().max(0).optional().or(z.literal("")),
+
+  /**
+   * Uploaded assets. The browser uploads to Cloudinary directly and posts back
+   * the resulting URLs, so these are re-validated here: we only accept URLs on
+   * Cloudinary's own host, which stops anyone posting an arbitrary link and
+   * having us render it on the wall.
+   */
+  artworkUrl: cloudinaryUrl.optional().or(z.literal("")),
+  artworkPublicId: z.string().max(300).optional().or(z.literal("")),
+  artworkWidth: z.coerce.number().int().positive().max(20000).optional(),
+  artworkHeight: z.coerce.number().int().positive().max(20000).optional(),
+  selfieUrl: cloudinaryUrl.optional().or(z.literal("")),
+  selfiePublicId: z.string().max(300).optional().or(z.literal("")),
+  artworkTitle: z.string().trim().max(120).optional().or(z.literal("")),
+  quote: z.string().trim().max(280).optional().or(z.literal("")),
 });
 
 export type WaitlistInput = z.infer<typeof waitlistSchema>;

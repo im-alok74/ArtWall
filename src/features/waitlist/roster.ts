@@ -2,7 +2,11 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import { countWaitlistEntries, listLitCities } from "@/features/waitlist/store";
+import {
+  countWaitlistEntries,
+  listLitCities,
+  listWallTiles,
+} from "@/features/waitlist/store";
 
 export const ROSTER_TAG = "waitlist-roster";
 
@@ -27,6 +31,13 @@ export const getRosterCount = unstable_cache(
 export async function getNextFounderNumber(): Promise<number> {
   return (await getRosterCount()) + 1;
 }
+
+/** Artworks currently hanging on the wall. */
+export const getWallTiles = unstable_cache(
+  async () => listWallTiles(),
+  ["wall-tiles"],
+  { tags: [ROSTER_TAG], revalidate: 300 }
+);
 
 /** Cities with at least one founding artist, for the Living Map. */
 export const getLitCities = unstable_cache(
