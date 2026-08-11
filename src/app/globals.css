@@ -243,3 +243,48 @@
     }
   }
 }
+/* ArtWall 2.0 Dashboard Theme */
+.dashboard-theme {
+  --dashboard-bg: #f8fafc;
+  --dashboard-surface: #ffffff;
+  --dashboard-border: #e2e8f0;
+  --dashboard-navy: #1a2332;
+  --dashboard-teal: #0d9488;
+  --dashboard-text: #334155;
+  --dashboard-text-muted: #64748b;
+  --dashboard-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --dashboard-radius: 0.5rem;
+  
+  background-color: var(--dashboard-bg);
+  color: var(--dashboard-text);
+  font-family: 'Inter', sans-serif;
+}
+
+.dashboard-theme h1, 
+.dashboard-theme h2, 
+.dashboard-theme h3, 
+.dashboard-theme h4 {
+  font-family: 'Fraunces', serif;
+  color: var(--dashboard-navy);
+}
+
+.dashboard-card {
+  background: var(--dashboard-surface);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+}
+
+.dashboard-btn-primary {
+  background-color: var(--dashboard-navy);
+  color: white;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.dashboard-btn-primary:hover {
+  background-color: var(--dashboard-teal);
+  transform: translateY(-1px);
+}
